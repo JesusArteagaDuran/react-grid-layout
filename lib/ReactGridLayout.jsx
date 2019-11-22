@@ -590,9 +590,11 @@ export default class ReactGridLayout extends React.Component<Props, State> {
     const resizable = Boolean(
       !l.static && isResizable && (l.isResizable || l.isResizable == null)
     );
+    console.log(child.key);
 
     return (
       <GridItem
+        key={child.key}
         containerWidth={width}
         cols={cols}
         margin={margin}
