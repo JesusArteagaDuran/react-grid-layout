@@ -77,6 +77,8 @@ export type Props = {
  * A reactive, fluid grid layout with draggable, resizable components.
  */
 
+let PreviousLayout = null;
+
 export default class ReactGridLayout extends React.Component<Props, State> {
   // TODO publish internal ReactClass displayName transform
   static displayName = "ReactGridLayout";
@@ -122,10 +124,16 @@ export default class ReactGridLayout extends React.Component<Props, State> {
     // layout is an array of object with the format:
     // {x: Number, y: Number, w: Number, h: Number, i: String}
     layout: function(props: Props) {
-      var layout = props.layout;
-      // I hope you're setting the data-grid property on the grid items
-      if (layout === undefined) return;
-      validateLayout(layout, "layout");
+      if (!PreviousLayout) PreviousLayout = props.layout;
+
+      if (props.isResizable || props.isDraggable) {
+        const layout = props.layout;
+        PreviousLayout = props.layout;
+        // I hope you're setting the data-grid property on the grid items
+        if (!layout) return;
+        validateLayout(layout, "layout");
+      }
+      return PreviousLayout;
     },
 
     //
@@ -261,34 +269,40 @@ export default class ReactGridLayout extends React.Component<Props, State> {
   }
 
   componentWillReceiveProps(nextProps: Props) {
-    let newLayoutBase;
-    // Legacy support for compactType
-    // Allow parent to set layout directly.
-    if (
-      !isEqual(nextProps.layout, this.props.layout) ||
-      nextProps.compactType !== this.props.compactType
-    ) {
-      newLayoutBase = nextProps.layout;
-    } else if (!childrenEqual(this.props.children, nextProps.children)) {
-      // If children change, also regenerate the layout. Use our state
-      // as the base in case because it may be more up to date than
-      // what is in props.
-      newLayoutBase = this.state.layout;
-    }
+    if (nextProps.isResizable || nextProps.isDraggable) {
+      let newLayoutBase;
+      // Legacy support for compactType
+      // Allow parent to set layout directly.
+      if (
+        !isEqual(nextProps.layout, this.props.layout) ||
+        nextProps.compactType !== this.props.compactType
+      ) {
+        newLayoutBase = nextProps.layout;
+      } else if (!childrenEqual(this.props.children, nextProps.children)) {
+        // If children change, also regenerate the layout. Use our state
+        // as the base in case because it may be more up to date than
+        // what is in props.
+        newLayoutBase = this.state.layout;
+      }
 
-    // We need to regenerate the layout.
-    if (newLayoutBase) {
-      const newLayout = synchronizeLayoutWithChildren(
-        newLayoutBase,
-        nextProps.children,
-        nextProps.cols,
-        this.compactType(nextProps)
-      );
-      const oldLayout = this.state.layout;
-      this.setState({ layout: newLayout });
-      this.onLayoutMaybeChanged(newLayout, oldLayout);
+      // We need to regenerate the layout.
+      if (newLayoutBase) {
+        const newLayout = synchronizeLayoutWithChildren(
+          newLayoutBase,
+          nextProps.children,
+          nextProps.cols,
+          this.compactType(nextProps)
+        );
+        const oldLayout = this.state.layout;
+        this.setState({ layout: newLayout });
+        this.onLayoutMaybeChanged(newLayout, oldLayout);
+      }
     }
   }
+
+  // componentDidUpdate(){
+  //   console.log('componentDidUpdate',this.props)
+  // }
 
   /**
    * Calculates a pixel value for the container.
@@ -534,7 +548,6 @@ export default class ReactGridLayout extends React.Component<Props, State> {
       maxRows,
       useCSSTransforms
     } = this.props;
-
     // {...this.state.activeDrag} is pretty slow, actually
     return (
       <GridItem
@@ -558,6 +571,8 @@ export default class ReactGridLayout extends React.Component<Props, State> {
       </GridItem>
     );
   }
+
+  emptyFunction = () => {};
 
   /**
    * Given a grid item, set its style attributes & surround in a <Draggable>.
@@ -590,7 +605,6 @@ export default class ReactGridLayout extends React.Component<Props, State> {
     const resizable = Boolean(
       !l.static && isResizable && (l.isResizable || l.isResizable == null)
     );
-    console.log(child.key);
 
     return (
       <GridItem
@@ -603,12 +617,12 @@ export default class ReactGridLayout extends React.Component<Props, State> {
         rowHeight={rowHeight}
         cancel={draggableCancel}
         handle={draggableHandle}
-        onDragStop={this.onDragStop}
-        onDragStart={this.onDragStart}
-        onDrag={this.onDrag}
-        onResizeStart={this.onResizeStart}
-        onResize={this.onResize}
-        onResizeStop={this.onResizeStop}
+        onDragStop={draggable ? this.onDragStop : this.emptyFunction}
+        onDragStart={draggable ? this.onDragStart : this.emptyFunction}
+        onDrag={draggable ? this.onDrag : this.emptyFunction}
+        onResizeStart={resizable ? this.onResizeStart : this.emptyFunction}
+        onResize={resizable ? this.onResize : this.emptyFunction}
+        onResizeStop={resizable ? this.onResizeStop : this.emptyFunction}
         isDraggable={draggable}
         isResizable={resizable}
         useCSSTransforms={useCSSTransforms && mounted}

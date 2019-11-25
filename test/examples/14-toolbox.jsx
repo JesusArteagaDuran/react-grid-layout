@@ -44,6 +44,8 @@ class ShowcaseLayout extends React.Component {
   };
 
   state = {
+    resizable: false,
+    draggable: false,
     currentBreakpoint: "lg",
     compactType: "vertical",
     mounted: false,
@@ -148,41 +150,60 @@ class ShowcaseLayout extends React.Component {
     });
   };
 
+  toggleResizable = () => {
+    this.setState({ resizable: !this.state.resizable });
+  };
+
+  toggleDraggable = () => {
+    this.setState({ draggable: !this.state.draggable });
+  };
+
   render() {
+    const {
+      resizable,
+      draggable,
+      cols,
+      mounted,
+      toolbox,
+      currentBreakpoint,
+      layouts,
+      compactType
+    } = this.state;
     return (
       <div>
         <div>
-          Current Breakpoint: {this.state.currentBreakpoint} ({
-            this.props.cols[this.state.currentBreakpoint]
-          }{" "}
+          Current Breakpoint: {currentBreakpoint} ({cols[currentBreakpoint]}{" "}
           columns)
         </div>
         <div>
-          Compaction type:{" "}
-          {_.capitalize(this.state.compactType) || "No Compaction"}
+          Compaction type: {_.capitalize(compactType) || "No Compaction"}
         </div>
         <button onClick={this.onNewLayout}>Generate New Layout</button>
         <button onClick={this.onCompactTypeChange}>
           Change Compaction Type
         </button>
+        <button onClick={this.toggleDraggable}>Dragable</button>
+        <button oncancel={this.toggleResizable}>Resizable</button>
 
         <ToolBox
-          items={this.state.toolbox[this.state.currentBreakpoint] || []}
+          items={toolbox[currentBreakpoint] || []}
           onTakeItem={this.onTakeItem}
         />
 
         <ResponsiveReactGridLayout
           {...this.props}
-          layouts={this.state.layouts}
+          draggable={draggable}
+          resizable={resizable}
+          layouts={layouts}
           onBreakpointChange={this.onBreakpointChange}
           onLayoutChange={this.onLayoutChange}
           // WidthProvider option
           measureBeforeMount={false}
           // I like to have it animate on mount. If you don't, delete `useCSSTransforms` (it's default `true`)
           // and set `measureBeforeMount={true}`.
-          useCSSTransforms={this.state.mounted}
-          compactType={this.state.compactType}
-          preventCollision={!this.state.compactType}
+          useCSSTransforms={mounted}
+          compactType={compactType}
+          preventCollision={!compactType}
         >
           {this.generateDOM()}
         </ResponsiveReactGridLayout>

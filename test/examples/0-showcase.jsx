@@ -13,6 +13,8 @@ class ShowcaseLayout extends React.Component {
   };
 
   state = {
+    resizable: true,
+    draggable: true,
     currentBreakpoint: "lg",
     compactType: "vertical",
     mounted: false,
@@ -67,7 +69,17 @@ class ShowcaseLayout extends React.Component {
     });
   };
 
+  toggleResizable = () => {
+    this.setState({ resizable: !this.state.resizable });
+  };
+
+  toggleDraggable = () => {
+    this.setState({ draggable: !this.state.draggable });
+  };
+
   render() {
+    const { resizable, draggable } = this.state;
+
     return (
       <div>
         <div>
@@ -84,8 +96,12 @@ class ShowcaseLayout extends React.Component {
         <button onClick={this.onCompactTypeChange}>
           Change Compaction Type
         </button>
+        <button onClick={this.toggleDraggable}>Dragable</button>
+        <button oncancel={this.toggleResizable}>Resizable</button>
         <ResponsiveReactGridLayout
           {...this.props}
+          isDraggable={draggable}
+          isResizable={resizable}
           layouts={this.state.layouts}
           onBreakpointChange={this.onBreakpointChange}
           onLayoutChange={this.onLayoutChange}
