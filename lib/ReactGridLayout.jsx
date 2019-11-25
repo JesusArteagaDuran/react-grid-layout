@@ -14,7 +14,8 @@ import {
   synchronizeLayoutWithChildren,
   validateLayout,
   getAllCollisions,
-  noop
+  noop,
+  emptyFunction
 } from "./utils";
 import GridItem from "./GridItem";
 import type {
@@ -572,8 +573,6 @@ export default class ReactGridLayout extends React.Component<Props, State> {
     );
   }
 
-  emptyFunction = () => {};
-
   /**
    * Given a grid item, set its style attributes & surround in a <Draggable>.
    * @param  {Element} child React element.
@@ -617,12 +616,12 @@ export default class ReactGridLayout extends React.Component<Props, State> {
         rowHeight={rowHeight}
         cancel={draggableCancel}
         handle={draggableHandle}
-        onDragStop={draggable ? this.onDragStop : this.emptyFunction}
-        onDragStart={draggable ? this.onDragStart : this.emptyFunction}
-        onDrag={draggable ? this.onDrag : this.emptyFunction}
-        onResizeStart={resizable ? this.onResizeStart : this.emptyFunction}
-        onResize={resizable ? this.onResize : this.emptyFunction}
-        onResizeStop={resizable ? this.onResizeStop : this.emptyFunction}
+        onDragStop={draggable ? this.onDragStop : emptyFunction}
+        onDragStart={draggable ? this.onDragStart : emptyFunction}
+        onDrag={draggable ? this.onDrag : emptyFunction}
+        onResizeStart={resizable ? this.onResizeStart : emptyFunction}
+        onResize={resizable ? this.onResize : emptyFunction}
+        onResizeStop={resizable ? this.onResizeStop : emptyFunction}
         isDraggable={draggable}
         isResizable={resizable}
         useCSSTransforms={useCSSTransforms && mounted}
