@@ -360,6 +360,7 @@ export default class GridItem extends React.Component<Props, State> {
     ];
     return (
       <Resizable
+        className={isResizable ? "resizable" : "no-resizable"}
         width={position.width}
         height={position.height}
         minConstraints={minConstraints}
@@ -483,31 +484,6 @@ export default class GridItem extends React.Component<Props, State> {
 
     const pos = this.calcPosition(x, y, w, h, this.state);
     const child = React.Children.only(this.props.children);
-
-    // Create the child element. We clone the existing element but modify its className and style.
-    // let newChild = <span
-    //   className={
-    //     classNames(
-    //       "react-grid-item",
-    //       child.props.className,
-    //       this.props.className,
-    //       {
-    //         static: this.props.static,
-    //         resizing: Boolean(this.state.resizing),
-    //         "react-draggable": isDraggable,
-    //         "react-draggable-dragging": Boolean(this.state.dragging),
-    //         cssTransforms: useCSSTransforms
-    //       }
-    //     )
-    //   }
-    //   // We can set the width and height on the child, but unfortunately we can't set the position.
-    //   style = {{
-    //     ...this.props.style,
-    //     ...child.props.style,
-    //     ...this.createStyle(pos)
-    //   }}
-    //   children = {child}
-    // />;
 
     // Create the child element. We clone the existing element but modify its className and style.
     let newChild = React.cloneElement(child, {

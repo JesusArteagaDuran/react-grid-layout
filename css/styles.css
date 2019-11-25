@@ -32,7 +32,12 @@
   user-select: none;
 }
 
-.react-grid-item > .react-resizable-handle {
+.react-grid-item.no-resizable > .react-resizable-handle,
+.react-grid-item.no-resizable > .react-resizable-handle::after {
+  display: none !important;
+}
+
+.react-grid-item.resizable > .react-resizable-handle {
   position: absolute;
   width: 20px;
   height: 20px;
@@ -41,7 +46,7 @@
   cursor: se-resize;
 }
 
-.react-grid-item > .react-resizable-handle::after {
+.react-grid-item.resizable > .react-resizable-handle::after {
   content: "";
   position: absolute;
   right: 3px;
