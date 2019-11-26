@@ -161,10 +161,6 @@ export default class GridItem extends React.Component<Props, State> {
     className: ""
   };
 
-  componentWillUnmount() {
-    console.log("Componente Desmontado");
-  }
-
   // Helper for generating column width
   calcColWidth(): number {
     const { margin, containerPadding, containerWidth, cols } = this.props;
