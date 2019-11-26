@@ -3,7 +3,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { DraggableCore } from "react-draggable";
 import { Resizable } from "react-resizable";
-import { emptyFunction, perc, setTopLeft, setTransform } from "./utils";
+import { noop, perc, setTopLeft, setTransform } from "./utils";
 import classNames from "classnames";
 import type { Element as ReactElement, Node as ReactNode } from "react";
 
@@ -318,11 +318,9 @@ export default class GridItem extends React.Component<Props, State> {
   ): ReactElement<any> {
     return (
       <DraggableCore
-        onStart={
-          isDraggable ? this.onDragHandler("onDragStart") : emptyFunction
-        }
-        onDrag={isDraggable ? this.onDragHandler("onDrag") : emptyFunction}
-        onStop={isDraggable ? this.onDragHandler("onDragStop") : emptyFunction}
+        onStart={isDraggable ? this.onDragHandler("onDragStart") : noop}
+        onDrag={isDraggable ? this.onDragHandler("onDrag") : noop}
+        onStop={isDraggable ? this.onDragHandler("onDragStop") : noop}
         handle={this.props.handle}
         cancel={
           ".react-resizable-handle" +
@@ -365,15 +363,11 @@ export default class GridItem extends React.Component<Props, State> {
         height={position.height}
         minConstraints={minConstraints}
         maxConstraints={maxConstraints}
-        onResizeStop={
-          isResizable ? this.onResizeHandler("onResizeStop") : emptyFunction
-        }
+        onResizeStop={isResizable ? this.onResizeHandler("onResizeStop") : noop}
         onResizeStart={
-          isResizable ? this.onResizeHandler("onResizeStart") : emptyFunction
+          isResizable ? this.onResizeHandler("onResizeStart") : noop
         }
-        onResize={
-          isResizable ? this.onResizeHandler("onResize") : emptyFunction
-        }
+        onResize={isResizable ? this.onResizeHandler("onResize") : noop}
       >
         {child}
       </Resizable>

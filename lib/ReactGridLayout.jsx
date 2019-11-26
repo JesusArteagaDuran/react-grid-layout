@@ -14,8 +14,7 @@ import {
   synchronizeLayoutWithChildren,
   validateLayout,
   getAllCollisions,
-  noop,
-  emptyFunction
+  noop
 } from "./utils";
 import GridItem from "./GridItem";
 import type {
@@ -134,7 +133,7 @@ export default class ReactGridLayout extends React.Component<Props, State> {
         if (!layout) return;
         validateLayout(layout, "layout");
       }
-      return PreviousLayout;
+      return;
     },
 
     //
@@ -616,12 +615,12 @@ export default class ReactGridLayout extends React.Component<Props, State> {
         rowHeight={rowHeight}
         cancel={draggableCancel}
         handle={draggableHandle}
-        onDragStop={draggable ? this.onDragStop : emptyFunction}
-        onDragStart={draggable ? this.onDragStart : emptyFunction}
-        onDrag={draggable ? this.onDrag : emptyFunction}
-        onResizeStart={resizable ? this.onResizeStart : emptyFunction}
-        onResize={resizable ? this.onResize : emptyFunction}
-        onResizeStop={resizable ? this.onResizeStop : emptyFunction}
+        onDragStop={draggable ? this.onDragStop : noop}
+        onDragStart={draggable ? this.onDragStart : noop}
+        onDrag={draggable ? this.onDrag : noop}
+        onResizeStart={resizable ? this.onResizeStart : noop}
+        onResize={resizable ? this.onResize : noop}
+        onResizeStop={resizable ? this.onResizeStop : noop}
         isDraggable={draggable}
         isResizable={resizable}
         useCSSTransforms={useCSSTransforms && mounted}
