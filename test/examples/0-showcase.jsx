@@ -97,7 +97,7 @@ class ShowcaseLayout extends React.Component {
           Change Compaction Type
         </button>
         <button onClick={this.toggleDraggable}>Dragable</button>
-        <button oncancel={this.toggleResizable}>Resizable</button>
+        <button onCancel={this.toggleResizable}>Resizable</button>
         <ResponsiveReactGridLayout
           {...this.props}
           isDraggable={draggable}
