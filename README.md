@@ -283,6 +283,9 @@ containerPadding: ?[number, number] = margin,
 // if you like.
 rowHeight: ?number = 150,
 
+// Render Custom Component instead of div component
+customComponent: PropTypes.element,
+
 //
 // Flags
 //

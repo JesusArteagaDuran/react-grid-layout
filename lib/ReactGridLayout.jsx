@@ -47,6 +47,7 @@ export type Props = {
   width: number,
   autoSize: boolean,
   cols: number,
+  customComponent: string,
   draggableCancel: string,
   draggableHandle: string,
   verticalCompact: boolean,
@@ -95,6 +96,10 @@ export default class ReactGridLayout extends React.Component<Props, State> {
 
     // If true, the container height swells and contracts to fit contents
     autoSize: PropTypes.bool,
+
+    // Render Custom Component instead of div component
+    customComponent: PropTypes.string,
+
     // # of cols.
     cols: PropTypes.number,
 
@@ -223,7 +228,8 @@ export default class ReactGridLayout extends React.Component<Props, State> {
     onDragStop: noop,
     onResizeStart: noop,
     onResize: noop,
-    onResizeStop: noop
+    onResizeStop: noop,
+    customComponent: "div"
   };
 
   state: State = {
@@ -628,8 +634,8 @@ export default class ReactGridLayout extends React.Component<Props, State> {
   }
 
   render() {
-    const { className, style } = this.props;
-
+    const { className, customComponent, style } = this.props;
+    const CustomComponent = customComponent;
     const mergedClassName = classNames("react-grid-layout", className);
     const mergedStyle = {
       height: this.containerHeight(),
@@ -637,12 +643,12 @@ export default class ReactGridLayout extends React.Component<Props, State> {
     };
 
     return (
-      <div className={mergedClassName} style={mergedStyle}>
+      <CustomComponent className={mergedClassName} style={mergedStyle}>
         {React.Children.map(this.props.children, child =>
           this.processGridItem(child)
         )}
         {this.placeholder()}
-      </div>
+      </CustomComponent>
     );
   }
 }
