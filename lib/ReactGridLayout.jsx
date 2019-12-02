@@ -98,7 +98,10 @@ export default class ReactGridLayout extends React.Component<Props, State> {
     autoSize: PropTypes.bool,
 
     // Render Custom Component instead of div component
-    customComponent: PropTypes.string,
+    customComponent: PropTypes.oneOfType([
+      PropTypes.string,
+      PropTypes.elementType
+    ]),
 
     // # of cols.
     cols: PropTypes.number,
